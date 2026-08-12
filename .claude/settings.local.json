@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npx shadcn@latest init -d --base-color neutral)",
+      "Bash(npx shadcn@latest init --help)",
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(awk 'NR==86,NR==118' app/globals.css)",
+      "Bash(npx shadcn@latest add button input label card avatar badge separator dialog sheet dropdown-menu skeleton sonner -y)",
+      "Bash(node -e \"console.log\\(require\\('crypto'\\).randomBytes\\(32\\).toString\\('base64'\\)\\)\")",
+      "Bash(npm run *)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Slava\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Slava-Desktop-medical-Incurance\\\\3970dafd-75fb-4cea-be7c-b14418864cca\\\\scratchpad\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -b cookies.txt http://localhost:3000/profile)"
+    ]
+  }
+}
