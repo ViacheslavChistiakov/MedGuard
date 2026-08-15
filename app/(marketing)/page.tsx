@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ShieldCheckIcon, SparklesIcon, HeartHandshakeIcon, ArrowRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { PlanGrid } from "@/components/plans/plan-grid"
 import { getAllPlans } from "@/lib/data/insurance-plans"
 import { getOptionalSession } from "@/lib/auth/dal"
@@ -64,13 +64,16 @@ export default async function HomePage() {
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {VALUE_PROPS.map(({ icon: Icon, title, description }) => (
-            <Card key={title}>
-              <CardHeader>
-                <Icon className="size-6 text-primary" />
-                <CardTitle className="pt-2">{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-            </Card>
+            <Card
+              key={title}
+              title={
+                <>
+                  <Icon className="mb-2 size-6 text-primary" />
+                  <span className="block">{title}</span>
+                </>
+              }
+              description={description}
+            />
           ))}
         </div>
       </section>
