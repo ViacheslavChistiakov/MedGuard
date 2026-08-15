@@ -1,4 +1,4 @@
 export interface SessionPayload {
   userId: string
-  expiresAt: number
+  apiToken: string
 }

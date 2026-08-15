@@ -1,10 +1,11 @@
 "use server"
 
 import { redirect } from "next/navigation"
+import axios from "axios"
+import { AuthError, CredentialsSignin } from "next-auth"
+import { signIn, signOut } from "@/auth"
+import { apiClient } from "@/lib/api/client"
 import { RegisterSchema, LoginSchema } from "@/lib/validation/auth-schemas"
-import { hashPassword, verifyPassword } from "@/lib/auth/password"
-import { createSessionCookie, deleteSessionCookie } from "@/lib/auth/session"
-import { userRepository } from "@/lib/repositories"
 
 export interface AuthActionState {
   errors?: {
@@ -33,14 +34,30 @@ export async function registerAction(
 
   const { name, email, password } = result.data
 
-  const existingUser = await userRepository.findByEmail(email)
-  if (existingUser) {
-    return { errors: { email: ["An account with this email already exists"] } }
+  try {
+    await apiClient.post("/api/auth/register", { name, email, password })
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 409) {
+        return { errors: { email: ["An account with this email already exists"] } }
+      }
+      if (error.response?.status === 400 && error.response.data?.errors) {
+        return { errors: error.response.data.errors }
+      }
+    }
+    return {
+      errors: { form: ["Something went wrong creating your account. Please try again."] },
+    }
   }
 
-  const passwordHash = await hashPassword(password)
-  const user = await userRepository.create({ name, email, passwordHash })
-  await createSessionCookie(user.id)
+  try {
+    await signIn("credentials", { email, password, redirect: false })
+  } catch (error) {
+    if (error instanceof AuthError) {
+      redirect("/login")
+    }
+    throw error
+  }
 
   redirect("/profile")
 }
@@ -59,23 +76,23 @@ export async function loginAction(
   }
 
   const { email, password } = result.data
-  const invalidCredentialsError = { errors: { form: ["Invalid email or password"] } }
 
-  const user = await userRepository.findByEmail(email)
-  if (!user) {
-    return invalidCredentialsError
+  try {
+    await signIn("credentials", { email, password, redirect: false })
+  } catch (error) {
+    if (error instanceof CredentialsSignin) {
+      return { errors: { form: ["Invalid email or password"] } }
+    }
+    if (error instanceof AuthError) {
+      return { errors: { form: ["Something went wrong. Please try again."] } }
+    }
+    throw error
   }
 
-  const isValidPassword = await verifyPassword(password, user.passwordHash)
-  if (!isValidPassword) {
-    return invalidCredentialsError
-  }
-
-  await createSessionCookie(user.id)
   redirect("/profile")
 }
 
 export async function logoutAction(): Promise<void> {
-  await deleteSessionCookie()
+  await signOut({ redirect: false })
   redirect("/")
 }
