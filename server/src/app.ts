@@ -2,6 +2,7 @@ import express, { type Express, type Request, type Response, type NextFunction }
 import cors from "cors"
 import morgan from "morgan"
 import { plansRouter } from "./routes/plans.routes.js"
+import { authRouter } from "./routes/auth.routes.js"
 
 export function createApp(): Express {
   const app = express()
@@ -15,6 +16,7 @@ export function createApp(): Express {
   })
 
   app.use("/api/plans", plansRouter)
+  app.use("/api/auth", authRouter)
 
   app.use((_req, res) => {
     res.status(404).json({ error: "Not found" })
