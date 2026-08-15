@@ -21,7 +21,9 @@ export default async function PlansPage(props: PageProps<"/plans">) {
     ? new Set(await favoritesRepository.listByUser(session.userId))
     : new Set<string>()
 
-  const plans = activeCategory ? getPlansByCategory(activeCategory) : getAllPlans()
+  const plans = activeCategory
+    ? await getPlansByCategory(activeCategory)
+    : await getAllPlans()
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">

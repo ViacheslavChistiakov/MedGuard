@@ -32,9 +32,8 @@ export default async function HomePage() {
     ? new Set(await favoritesRepository.listByUser(session.userId))
     : new Set<string>()
 
-  const featuredPlans = getAllPlans()
-    .filter((plan) => plan.badge)
-    .slice(0, 3)
+  const allPlans = await getAllPlans()
+  const featuredPlans = allPlans.filter((plan) => plan.badge).slice(0, 3)
 
   return (
     <>
