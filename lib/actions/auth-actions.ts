@@ -32,10 +32,10 @@ export async function registerAction(
     return { errors: result.error.flatten().fieldErrors }
   }
 
-  const { name, email, password } = result.data
+  const { name, email, password, confirmPassword } = result.data
 
   try {
-    await apiClient.post("/api/auth/register", { name, email, password })
+    await apiClient.post("/api/auth/register", { name, email, password, confirmPassword })
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 409) {

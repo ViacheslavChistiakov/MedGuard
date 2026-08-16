@@ -22,19 +22,11 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
     (_state: boolean, next: boolean) => next
   )
   const [isPending, startTransition] = useTransition()
-  const [isBuying, startBuyTransition] = useTransition()
 
   function handleToggle() {
     startTransition(async () => {
       setOptimisticFavorited(!optimisticFavorited)
       await toggleFavoriteAction(plan.id)
-    })
-  }
-
-  function handleBuy() {
-    startBuyTransition(async () => {
-      // TODO: wire up to a real checkout/purchase flow once one exists.
-      await new Promise((resolve) => setTimeout(resolve, 1200))
     })
   }
 
@@ -92,7 +84,7 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
             <span className="text-sm text-muted-foreground">★ {plan.rating.toFixed(1)}</span>
           </div>
           {isAuthenticated ? (
-            <BuyButton loading={isBuying} onClick={handleBuy}>
+            <BuyButton render={<Link href="/checkout" aria-label="Buy this plan" />}>
               Buy Insurance
             </BuyButton>
           ) : (
