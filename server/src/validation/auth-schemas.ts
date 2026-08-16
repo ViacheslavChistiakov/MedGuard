@@ -14,3 +14,8 @@ export const LoginBodySchema = z.object({
   email: z.email("Enter a valid email address").trim().toLowerCase(),
   password: z.string().min(1, "Password is required"),
 })
+
+export const OAuthBodySchema = z.object({
+  name: z.string().trim().min(1).max(80),
+  email: z.email("Enter a valid email address").trim().toLowerCase(),
+})

@@ -2,6 +2,7 @@ import { Router } from "express"
 import {
   register,
   login,
+  oauthLogin,
   getAllUsers,
   getUserById,
   getUserPlans,
@@ -10,11 +11,13 @@ import {
   removeUserFavorite,
 } from "../controllers/auth.controller.js"
 import { requireAuth, requireSelf } from "../middleware/auth.middleware.js"
+import { requireInternalSecret } from "../middleware/internal.middleware.js"
 
 export const authRouter = Router()
 
 authRouter.post("/register", register)
 authRouter.post("/login", login)
+authRouter.post("/oauth", requireInternalSecret, oauthLogin)
 authRouter.get("/users", getAllUsers)
 authRouter.get("/users/:id", getUserById)
 authRouter.get("/users/:id/plans", requireAuth, requireSelf, getUserPlans)

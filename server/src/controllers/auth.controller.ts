@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs"
 import mongoose, { type HydratedDocument } from "mongoose"
 import { User, type UserDocument } from "../models/user.model.js"
 import { InsurancePlan } from "../models/insurance-plan.model.js"
-import { RegisterBodySchema, LoginBodySchema } from "../validation/auth-schemas.js"
+import { RegisterBodySchema, LoginBodySchema, OAuthBodySchema } from "../validation/auth-schemas.js"
 import { signAuthToken } from "../utils/jwt.js"
 
 const SALT_ROUNDS = 12
@@ -168,6 +168,32 @@ export async function removeUserFavorite(req: Request, res: Response, next: Next
   }
 }
 
+// Called by our Next.js server after it verifies a Google sign-in, to find
+// or create the matching account and issue the same kind of token password
+// login gets. Only reachable with the internal secret (see auth.routes.ts).
+export async function oauthLogin(req: Request, res: Response, next: NextFunction) {
+  try {
+    const result = OAuthBodySchema.safeParse(req.body)
+    if (!result.success) {
+      res.status(400).json({ errors: result.error.flatten().fieldErrors })
+      return
+    }
+
+    const { name, email } = result.data
+
+    let user = await User.findOne({ email })
+    if (!user) {
+      user = await User.create({ name, email })
+    }
+
+    const token = signAuthToken({ sub: user._id.toString(), email: user.email })
+
+    res.status(200).json({ user: toSafeUser(user), token })
+  } catch (error) {
+    next(error)
+  }
+}
+
 export async function login(req: Request, res: Response, next: NextFunction) {
   try {
     const result = LoginBodySchema.safeParse(req.body)
@@ -180,7 +206,7 @@ export async function login(req: Request, res: Response, next: NextFunction) {
     const invalidCredentialsError = { error: "Invalid email or password" }
 
     const user = await User.findOne({ email })
-    if (!user) {
+    if (!user || !user.passwordHash) {
       res.status(401).json(invalidCredentialsError)
       return
     }
