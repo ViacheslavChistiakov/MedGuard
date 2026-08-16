@@ -96,3 +96,7 @@ export async function logoutAction(): Promise<void> {
   await signOut({ redirect: false })
   redirect("/")
 }
+
+export async function googleSignInAction(): Promise<void> {
+  await signIn("google", { redirectTo: "/profile" })
+}
