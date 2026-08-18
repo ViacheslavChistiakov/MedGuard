@@ -1,3 +1,5 @@
+import path from "node:path"
+import fs from "node:fs"
 import type { Request, Response, NextFunction } from "express"
 import bcrypt from "bcryptjs"
 import mongoose, { type HydratedDocument } from "mongoose"
@@ -5,16 +7,26 @@ import { User, type UserDocument } from "../models/user.model.js"
 import { InsurancePlan } from "../models/insurance-plan.model.js"
 import { RegisterBodySchema, LoginBodySchema, OAuthBodySchema } from "../validation/auth-schemas.js"
 import { signAuthToken } from "../utils/jwt.js"
+import { AVATARS_DIR } from "../middleware/upload.middleware.js"
 
 const SALT_ROUNDS = 12
+const AVATAR_URL_PREFIX = "/uploads/avatars/"
 
 function toSafeUser(user: HydratedDocument<UserDocument>) {
   return {
     id: user._id.toString(),
     name: user.name,
     email: user.email,
+    avatarUrl: user.avatarUrl ?? null,
     createdAt: user.createdAt.toISOString(),
   }
+}
+
+function deleteAvatarFile(avatarUrl: string | null | undefined) {
+  if (!avatarUrl || !avatarUrl.startsWith(AVATAR_URL_PREFIX)) return
+  const filename = avatarUrl.slice(AVATAR_URL_PREFIX.length)
+  const filePath = path.join(AVATARS_DIR, filename)
+  fs.unlink(filePath, () => {})
 }
 
 export async function register(req: Request, res: Response, next: NextFunction) {
@@ -179,16 +191,72 @@ export async function oauthLogin(req: Request, res: Response, next: NextFunction
       return
     }
 
-    const { name, email } = result.data
+    const { name, email, avatarUrl } = result.data
 
     let user = await User.findOne({ email })
     if (!user) {
-      user = await User.create({ name, email })
+      user = await User.create({
+        name,
+        email,
+        ...(avatarUrl ? { avatarUrl, avatarSource: "google" } : {}),
+      })
+    } else if (avatarUrl && user.avatarSource !== "upload" && user.avatarUrl !== avatarUrl) {
+      user.avatarUrl = avatarUrl
+      user.avatarSource = "google"
+      await user.save()
     }
 
     const token = signAuthToken({ sub: user._id.toString(), email: user.email })
 
     res.status(200).json({ user: toSafeUser(user), token })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.params.id
+    const file = req.file
+    if (!file) {
+      res.status(400).json({ error: "No avatar file was provided" })
+      return
+    }
+
+    const user = await User.findById(userId)
+    if (!user) {
+      fs.unlink(file.path, () => {})
+      res.status(404).json({ error: "User not found" })
+      return
+    }
+
+    deleteAvatarFile(user.avatarUrl)
+
+    user.avatarUrl = `${AVATAR_URL_PREFIX}${file.filename}`
+    user.avatarSource = "upload"
+    await user.save()
+
+    res.status(200).json(toSafeUser(user))
+  } catch (error) {
+    next(error)
+  }
+}
+
+export async function removeAvatar(req: Request, res: Response, next: NextFunction) {
+  try {
+    const userId = req.params.id
+    const user = await User.findById(userId)
+    if (!user) {
+      res.status(404).json({ error: "User not found" })
+      return
+    }
+
+    deleteAvatarFile(user.avatarUrl)
+    user.avatarUrl = null
+    user.avatarSource = null
+    await user.save()
+
+    res.status(200).json(toSafeUser(user))
   } catch (error) {
     next(error)
   }

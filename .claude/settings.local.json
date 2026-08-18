@@ -11,7 +11,8 @@
       "Bash(npm run *)",
       "Bash(mkdir -p \"C:\\\\Users\\\\Slava\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Slava-Desktop-medical-Incurance\\\\3970dafd-75fb-4cea-be7c-b14418864cca\\\\scratchpad\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/)",
-      "Bash(curl -s -b cookies.txt http://localhost:3000/profile)"
+      "Bash(curl -s -b cookies.txt http://localhost:3000/profile)",
+      "Bash(netstat -ano)"
     ]
   }
 }
