@@ -29,10 +29,16 @@ if (!INTERNAL_API_SECRET) {
 
 // Bridges a verified Google sign-in to our own backend: finds or creates the
 // matching account and returns the same kind of API token password login gets.
-async function oauthLogin(name: string, email: string): Promise<LoginResponse> {
+// Passing along the Google profile picture lets the backend keep the user's
+// avatar in sync, unless they've already uploaded one of their own.
+async function oauthLogin(
+  name: string,
+  email: string,
+  avatarUrl?: string | null
+): Promise<LoginResponse> {
   const { data } = await apiClient.post<LoginResponse>(
     "/api/auth/oauth",
-    { name, email },
+    { name, email, avatarUrl },
     { headers: { "x-internal-secret": INTERNAL_API_SECRET } }
   )
   return data
@@ -70,7 +76,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!profile?.email) return token
         const { user: backendUser, token: apiToken } = await oauthLogin(
           profile.name ?? profile.email,
-          profile.email
+          profile.email,
+          typeof profile.picture === "string" ? profile.picture : null
         )
         token.id = backendUser.id
         token.email = backendUser.email

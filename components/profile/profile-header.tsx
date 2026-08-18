@@ -1,15 +1,6 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
+import { AvatarUpload } from "@/components/profile/avatar-upload"
 import type { UserDTO } from "@/lib/types/user"
-
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]!.toUpperCase())
-    .join("")
-}
 
 export function ProfileHeader({
   user,
@@ -20,9 +11,7 @@ export function ProfileHeader({
 }) {
   return (
     <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-      <Avatar size="lg">
-        <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
-      </Avatar>
+      <AvatarUpload name={user.name} avatarUrl={user.avatarUrl} />
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold">{user.name}</h1>
         <p className="text-sm text-muted-foreground">{user.email}</p>

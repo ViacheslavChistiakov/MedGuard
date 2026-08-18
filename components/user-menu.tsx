@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import Link from "next/link"
 import { UserIcon, LogOutIcon, Loader2Icon } from "lucide-react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -35,6 +35,7 @@ export function UserMenu({ user }: { user: UserDTO }) {
         render={<Button variant="ghost" size="icon" className="rounded-full" />}
       >
         <Avatar size="sm">
+          {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={user.name} />}
           <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
