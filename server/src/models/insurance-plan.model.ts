@@ -29,6 +29,12 @@ const insurancePlanSchema = new Schema(
     rating: { type: Number, required: true },
     badge: { type: String, enum: PLAN_BADGES },
     description: { type: String, required: true },
+    translations: {
+      ru: {
+        description: { type: String },
+        coverageHighlights: { type: [String] },
+      },
+    },
   },
   {
     // The Atlas collection was created by hand as "Insuarances" (typo and
