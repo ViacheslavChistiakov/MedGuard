@@ -1,31 +1,37 @@
-import Link from "next/link"
 import { ShieldCheckIcon, SparklesIcon, HeartHandshakeIcon, ArrowRightIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { LocaleLink } from "@/components/locale-link"
 import { PlanGrid } from "@/components/plans/plan-grid"
 import { getAllPlans } from "@/lib/data/insurance-plans"
 import { getOptionalSession } from "@/lib/auth/dal"
 import { favoritesRepository } from "@/lib/repositories"
+import initTranslations from "@/i18n"
+import { isLocale, fallbackLng } from "@/i18n/settings"
 
-const VALUE_PROPS = [
-  {
-    icon: ShieldCheckIcon,
-    title: "Vetted coverage",
-    description: "Every plan is reviewed for clear terms, so you know exactly what's covered.",
-  },
-  {
-    icon: SparklesIcon,
-    title: "Compare in minutes",
-    description: "Filter by category and tier to find the plan that fits your budget and needs.",
-  },
-  {
-    icon: HeartHandshakeIcon,
-    title: "Save your favorites",
-    description: "Create an account to bookmark plans and pick up right where you left off.",
-  },
-]
+export default async function HomePage({ params }: PageProps<"/[locale]">) {
+  const { locale: rawLocale } = await params
+  const locale = isLocale(rawLocale) ? rawLocale : fallbackLng
+  const { t } = await initTranslations(locale)
 
-export default async function HomePage() {
+  const VALUE_PROPS = [
+    {
+      icon: ShieldCheckIcon,
+      title: t("home.valueProps.vetted.title"),
+      description: t("home.valueProps.vetted.description"),
+    },
+    {
+      icon: SparklesIcon,
+      title: t("home.valueProps.compare.title"),
+      description: t("home.valueProps.compare.description"),
+    },
+    {
+      icon: HeartHandshakeIcon,
+      title: t("home.valueProps.favorites.title"),
+      description: t("home.valueProps.favorites.description"),
+    },
+  ]
+
   const session = await getOptionalSession()
   const isAuthenticated = Boolean(session)
   const favoritedPlanIds = session
@@ -40,22 +46,19 @@ export default async function HomePage() {
       <section className="border-b border-border/60 bg-gradient-to-b from-secondary/60 to-background">
         <div className="mx-auto flex max-w-6xl flex-col items-start gap-6 px-4 py-20 sm:px-6 sm:py-28">
           <span className="rounded-full bg-primary/10 px-3 py-1 text-sm font-medium text-primary">
-            Health, dental, vision, life &amp; more
+            {t("home.badge")}
           </span>
           <h1 className="max-w-2xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">
-            Insurance coverage that&apos;s simple to compare and easy to trust
+            {t("home.title")}
           </h1>
-          <p className="max-w-xl text-lg text-muted-foreground">
-            MedGuard brings every type of insurance plan into one place, so you can compare
-            prices and coverage side by side, then save the ones you like to your profile.
-          </p>
+          <p className="max-w-xl text-lg text-muted-foreground">{t("home.subtitle")}</p>
           <div className="flex flex-wrap gap-3">
-            <Button size="lg" render={<Link href="/plans" />}>
-              Browse plans
+            <Button size="lg" render={<LocaleLink href="/plans" />}>
+              {t("home.browsePlans")}
               <ArrowRightIcon />
             </Button>
-            <Button size="lg" variant="outline" render={<Link href="/register" />}>
-              Create a free account
+            <Button size="lg" variant="outline" render={<LocaleLink href="/register" />}>
+              {t("home.createAccount")}
             </Button>
           </div>
         </div>
@@ -81,22 +84,21 @@ export default async function HomePage() {
       <section className="mx-auto w-full max-w-6xl px-4 pb-20 sm:px-6">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold">Popular plans</h2>
-            <p className="text-sm text-muted-foreground">
-              A few favorites among MedGuard members right now.
-            </p>
+            <h2 className="text-2xl font-semibold">{t("home.popularPlans.title")}</h2>
+            <p className="text-sm text-muted-foreground">{t("home.popularPlans.subtitle")}</p>
           </div>
-          <Link
+          <LocaleLink
             href="/plans"
             className="hidden shrink-0 text-sm font-medium text-primary hover:underline sm:block"
           >
-            View all plans
-          </Link>
+            {t("home.popularPlans.viewAll")}
+          </LocaleLink>
         </div>
         <PlanGrid
           plans={featuredPlans}
           favoritedPlanIds={favoritedPlanIds}
           isAuthenticated={isAuthenticated}
+          emptyMessage={t("plans.emptyMessage")}
         />
       </section>
     </>

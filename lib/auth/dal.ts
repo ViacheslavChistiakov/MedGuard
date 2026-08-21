@@ -3,6 +3,7 @@ import { cache } from "react"
 import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { apiClient } from "@/lib/api/client"
+import { getLocale } from "@/lib/i18n/get-locale"
 import type { SessionPayload } from "@/lib/types/session"
 import type { UserDTO } from "@/lib/types/user"
 
@@ -33,7 +34,7 @@ export const getOptionalSession = cache(async (): Promise<SessionPayload | null>
 export const verifySession = cache(async (): Promise<SessionPayload> => {
   const session = await getOptionalSession()
   if (!session) {
-    redirect("/login")
+    redirect(`/${await getLocale()}/login`)
   }
   return session
 })

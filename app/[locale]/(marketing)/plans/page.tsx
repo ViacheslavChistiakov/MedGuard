@@ -3,13 +3,29 @@ import { PlanGrid } from "@/components/plans/plan-grid"
 import { getAllPlans, getPlansByCategory } from "@/lib/data/insurance-plans"
 import { getOptionalSession } from "@/lib/auth/dal"
 import { favoritesRepository } from "@/lib/repositories"
-import { PLAN_CATEGORY_LABELS, type PlanCategory } from "@/lib/types/plan"
+import { PLAN_CATEGORIES, type PlanCategory } from "@/lib/types/plan"
+import initTranslations from "@/i18n"
+import { isLocale, fallbackLng } from "@/i18n/settings"
+import type { Metadata } from "next"
 
 function isPlanCategory(value: string | undefined): value is PlanCategory {
-  return Boolean(value) && value! in PLAN_CATEGORY_LABELS
+  return Boolean(value) && (PLAN_CATEGORIES as readonly string[]).includes(value!)
 }
 
-export default async function PlansPage(props: PageProps<"/plans">) {
+export async function generateMetadata({
+  params,
+}: PageProps<"/[locale]/plans">): Promise<Metadata> {
+  const { locale: rawLocale } = await params
+  const locale = isLocale(rawLocale) ? rawLocale : fallbackLng
+  const { t } = await initTranslations(locale)
+  return { title: t("plans.metaTitle") }
+}
+
+export default async function PlansPage(props: PageProps<"/[locale]/plans">) {
+  const { locale: rawLocale } = await props.params
+  const locale = isLocale(rawLocale) ? rawLocale : fallbackLng
+  const { t } = await initTranslations(locale)
+
   const searchParams = await props.searchParams
   const rawCategory = searchParams.category
   const categoryParam = Array.isArray(rawCategory) ? rawCategory[0] : rawCategory
@@ -29,10 +45,8 @@ export default async function PlansPage(props: PageProps<"/plans">) {
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
       <div className="mb-8 flex flex-col gap-4">
         <div>
-          <h1 className="text-3xl font-semibold">Browse insurance plans</h1>
-          <p className="mt-1 text-muted-foreground">
-            Filter by category to compare coverage and pricing side by side.
-          </p>
+          <h1 className="text-3xl font-semibold">{t("plans.title")}</h1>
+          <p className="mt-1 text-muted-foreground">{t("plans.subtitle")}</p>
         </div>
         <PlanFilters activeCategory={activeCategory} />
       </div>
@@ -40,6 +54,7 @@ export default async function PlansPage(props: PageProps<"/plans">) {
         plans={plans}
         favoritedPlanIds={favoritedPlanIds}
         isAuthenticated={isAuthenticated}
+        emptyMessage={t("plans.emptyMessage")}
       />
     </div>
   )

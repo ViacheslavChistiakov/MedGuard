@@ -9,6 +9,10 @@ if (!API_BASE_URL) {
   throw new Error("API_BASE_URL environment variable is not set")
 }
 
+// `error` is either a translation-key code (looked up under `profile.avatar`
+// in the messages) or, when the backend responds with its own message, that
+// raw string passed through as-is — the client falls back to displaying it
+// untranslated in that case.
 export interface AvatarActionState {
   error?: string
 }
@@ -26,7 +30,7 @@ export async function uploadAvatarAction(
 
   const file = formData.get("avatar")
   if (!(file instanceof File) || file.size === 0) {
-    return { error: "Please choose an image to upload" }
+    return { error: "chooseImage" }
   }
 
   const uploadForm = new FormData()
@@ -39,15 +43,10 @@ export async function uploadAvatarAction(
   })
 
   if (!response.ok) {
-    return {
-      error: await parseErrorMessage(
-        response,
-        "Something went wrong uploading your avatar. Please try again."
-      ),
-    }
+    return { error: await parseErrorMessage(response, "uploadError") }
   }
 
-  revalidatePath("/profile")
+  revalidatePath("/[locale]/profile", "page")
   return {}
 }
 
@@ -60,14 +59,9 @@ export async function removeAvatarAction(): Promise<AvatarActionState> {
   })
 
   if (!response.ok) {
-    return {
-      error: await parseErrorMessage(
-        response,
-        "Something went wrong removing your avatar. Please try again."
-      ),
-    }
+    return { error: await parseErrorMessage(response, "removeError") }
   }
 
-  revalidatePath("/profile")
+  revalidatePath("/[locale]/profile", "page")
   return {}
 }

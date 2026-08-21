@@ -1,9 +1,10 @@
 "use client"
 
 import { useEffect } from "react"
-import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { TriangleAlertIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { LocaleLink } from "@/components/locale-link"
 
 export default function GlobalError({
   error,
@@ -12,6 +13,8 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const { t } = useTranslation()
+
   useEffect(() => {
     console.error(error)
   }, [error])
@@ -20,16 +23,14 @@ export default function GlobalError({
     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-24 text-center">
       <TriangleAlertIcon className="size-10 text-destructive" />
       <div className="flex flex-col gap-1">
-        <h1 className="text-xl font-semibold">Something went wrong</h1>
-        <p className="text-sm text-muted-foreground">
-          An unexpected error occurred. You can try again or head back home.
-        </p>
+        <h1 className="text-xl font-semibold">{t("error.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("error.description")}</p>
       </div>
       <div className="flex gap-2">
         <Button variant="outline" onClick={reset}>
-          Try again
+          {t("error.tryAgain")}
         </Button>
-        <Button render={<Link href="/" />}>Go home</Button>
+        <Button render={<LocaleLink href="/" />}>{t("error.goHome")}</Button>
       </div>
     </div>
   )

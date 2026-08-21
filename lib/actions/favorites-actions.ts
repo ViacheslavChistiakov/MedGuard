@@ -17,8 +17,8 @@ export async function toggleFavoriteAction(planId: string): Promise<{ favorited:
     await favoritesRepository.add(session.userId, planId)
   }
 
-  revalidatePath("/plans")
-  revalidatePath("/profile")
+  revalidatePath("/[locale]/plans", "page")
+  revalidatePath("/[locale]/profile", "page")
 
   return { favorited: !isFavorite }
 }

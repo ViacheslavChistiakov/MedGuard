@@ -1,22 +1,32 @@
 "use client"
 
 import { useOptimistic, useTransition } from "react"
-import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { HeartIcon, CheckIcon } from "lucide-react"
 import { Card, BuyButton } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { LocaleLink } from "@/components/locale-link"
+import { useLocalizedPlan } from "@/components/plan-store-provider"
 import { toggleFavoriteAction } from "@/lib/actions/favorites-actions"
-import { PLAN_CATEGORY_LABELS, PLAN_TIER_LABELS, type InsurancePlan } from "@/lib/types/plan"
+import type { PlanBadge } from "@/lib/types/plan"
 import { cn, formatCurrency } from "@/lib/utils"
 
 interface PlanCardProps {
-  plan: InsurancePlan
+  planId: string
   initialFavorited: boolean
   isAuthenticated: boolean
 }
 
-export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardProps) {
+const BADGE_KEYS: Record<PlanBadge, string> = {
+  Popular: "popular",
+  "Best Value": "bestValue",
+  New: "new",
+}
+
+export function PlanCard({ planId, initialFavorited, isAuthenticated }: PlanCardProps) {
+  const { t } = useTranslation()
+  const plan = useLocalizedPlan(planId)
   const [optimisticFavorited, setOptimisticFavorited] = useOptimistic(
     initialFavorited,
     (_state: boolean, next: boolean) => next
@@ -26,9 +36,11 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
   function handleToggle() {
     startTransition(async () => {
       setOptimisticFavorited(!optimisticFavorited)
-      await toggleFavoriteAction(plan.id)
+      await toggleFavoriteAction(planId)
     })
   }
+
+  if (!plan) return null
 
   return (
     <Card
@@ -36,9 +48,9 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
       title={
         <>
           <div className="mb-1.5 flex flex-wrap items-center gap-1.5">
-            <Badge variant="secondary">{PLAN_CATEGORY_LABELS[plan.category]}</Badge>
-            <Badge variant="outline">{PLAN_TIER_LABELS[plan.tier]}</Badge>
-            {plan.badge && <Badge>{plan.badge}</Badge>}
+            <Badge variant="secondary">{t(`plans.categories.${plan.category}`)}</Badge>
+            <Badge variant="outline">{t(`plans.tiers.${plan.tier}`)}</Badge>
+            {plan.badge && <Badge>{t(`plans.badges.${BADGE_KEYS[plan.badge]}`)}</Badge>}
           </div>
           <span className="text-lg">{plan.name}</span>
         </>
@@ -53,7 +65,7 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
             disabled={isPending}
             onClick={handleToggle}
             aria-pressed={optimisticFavorited}
-            aria-label={optimisticFavorited ? "Remove from favorites" : "Add to favorites"}
+            aria-label={optimisticFavorited ? t("plans.favoriteRemove") : t("plans.favoriteAdd")}
           >
             <HeartIcon
               className={cn(
@@ -66,7 +78,7 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
           <Button
             variant="ghost"
             size="icon"
-            render={<Link href="/login" aria-label="Log in to favorite this plan" />}
+            render={<LocaleLink href="/login" aria-label={t("plans.loginToFavoriteAria")} />}
           >
             <HeartIcon className="size-4" />
           </Button>
@@ -79,17 +91,17 @@ export function PlanCard({ plan, initialFavorited, isAuthenticated }: PlanCardPr
               <span className="text-2xl font-semibold">
                 {formatCurrency(plan.monthlyPriceUsd)}
               </span>
-              <span className="text-sm text-muted-foreground">/mo</span>
+              <span className="text-sm text-muted-foreground">{t("plans.perMonth")}</span>
             </div>
             <span className="text-sm text-muted-foreground">★ {plan.rating.toFixed(1)}</span>
           </div>
           {isAuthenticated ? (
-            <BuyButton render={<Link href="/checkout" aria-label="Buy this plan" />}>
-              Buy Insurance
+            <BuyButton render={<LocaleLink href="/checkout" aria-label={t("plans.buyThisPlanAria")} />}>
+              {t("plans.buyInsurance")}
             </BuyButton>
           ) : (
-            <BuyButton render={<Link href="/login" aria-label="Log in to buy this plan" />}>
-              Log in to buy
+            <BuyButton render={<LocaleLink href="/login" aria-label={t("plans.loginToBuyAria")} />}>
+              {t("plans.loginToBuy")}
             </BuyButton>
           )}
         </div>

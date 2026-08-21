@@ -1,5 +1,6 @@
 "use client"
 
+import { useTranslation } from "react-i18next"
 import { Loader2Icon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,11 +22,12 @@ export const CardPaymentForm: React.FC<CardPaymentFormProps> = ({ onSubmit }) =>
     handleCvcChange,
     handleSubmit,
   } = useCardPaymentForm(onSubmit)
+  const { t } = useTranslation()
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="cardholderName">Name on card</Label>
+        <Label htmlFor="cardholderName">{t("checkout.nameOnCard")}</Label>
         <Input
           id="cardholderName"
           name="cardholderName"
@@ -38,7 +40,7 @@ export const CardPaymentForm: React.FC<CardPaymentFormProps> = ({ onSubmit }) =>
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="cardNumber">Card number</Label>
+        <Label htmlFor="cardNumber">{t("checkout.cardNumber")}</Label>
         <Input
           id="cardNumber"
           name="cardNumber"
@@ -54,7 +56,7 @@ export const CardPaymentForm: React.FC<CardPaymentFormProps> = ({ onSubmit }) =>
 
       <div className="flex gap-4">
         <div className="flex flex-1 flex-col gap-1.5">
-          <Label htmlFor="expiry">Expiry</Label>
+          <Label htmlFor="expiry">{t("checkout.expiry")}</Label>
           <Input
             id="expiry"
             name="expiry"
@@ -68,7 +70,7 @@ export const CardPaymentForm: React.FC<CardPaymentFormProps> = ({ onSubmit }) =>
           />
         </div>
         <div className="flex flex-1 flex-col gap-1.5">
-          <Label htmlFor="cvc">CVC</Label>
+          <Label htmlFor="cvc">{t("checkout.cvc")}</Label>
           <Input
             id="cvc"
             name="cvc"
@@ -85,7 +87,7 @@ export const CardPaymentForm: React.FC<CardPaymentFormProps> = ({ onSubmit }) =>
 
       <Button type="submit" size="lg" disabled={!isValid || submitting} className="mt-1 w-full gap-2">
         {submitting && <Loader2Icon className="size-4 animate-spin" />}
-        {submitting ? "Processing…" : "Confirm payment"}
+        {submitting ? t("checkout.processing") : t("checkout.confirmPayment")}
       </Button>
     </form>
   )

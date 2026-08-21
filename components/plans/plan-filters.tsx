@@ -1,8 +1,9 @@
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { PLAN_CATEGORY_LABELS, type PlanCategory } from "@/lib/types/plan"
+"use client"
 
-const CATEGORIES = Object.keys(PLAN_CATEGORY_LABELS) as PlanCategory[]
+import { useTranslation } from "react-i18next"
+import { LocaleLink } from "@/components/locale-link"
+import { cn } from "@/lib/utils"
+import { PLAN_CATEGORIES, type PlanCategory } from "@/lib/types/plan"
 
 function chipClasses(active: boolean) {
   return cn(
@@ -14,19 +15,21 @@ function chipClasses(active: boolean) {
 }
 
 export function PlanFilters({ activeCategory }: { activeCategory?: PlanCategory }) {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-wrap gap-2">
-      <Link href="/plans" className={chipClasses(!activeCategory)}>
-        All plans
-      </Link>
-      {CATEGORIES.map((category) => (
-        <Link
+      <LocaleLink href="/plans" className={chipClasses(!activeCategory)}>
+        {t("plans.allPlans")}
+      </LocaleLink>
+      {PLAN_CATEGORIES.map((category) => (
+        <LocaleLink
           key={category}
           href={`/plans?category=${category}`}
           className={chipClasses(activeCategory === category)}
         >
-          {PLAN_CATEGORY_LABELS[category]}
-        </Link>
+          {t(`plans.categories.${category}`)}
+        </LocaleLink>
       ))}
     </div>
   )

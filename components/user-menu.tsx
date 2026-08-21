@@ -1,7 +1,7 @@
 "use client"
 
 import { useTransition } from "react"
-import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import { UserIcon, LogOutIcon, Loader2Icon } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import { logoutAction } from "@/lib/actions/auth-actions"
+import { LocaleLink } from "@/components/locale-link"
 import type { UserDTO } from "@/lib/types/user"
 
 function getInitials(name: string) {
@@ -28,6 +29,7 @@ function getInitials(name: string) {
 
 export function UserMenu({ user }: { user: UserDTO }) {
   const [isPending, startTransition] = useTransition()
+  const { t } = useTranslation()
 
   return (
     <DropdownMenu>
@@ -44,9 +46,9 @@ export function UserMenu({ user }: { user: UserDTO }) {
           <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem render={<Link href="/profile" />}>
+        <DropdownMenuItem render={<LocaleLink href="/profile" />}>
           <UserIcon />
-          Profile
+          {t("nav.profile")}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -55,7 +57,7 @@ export function UserMenu({ user }: { user: UserDTO }) {
           onClick={() => startTransition(() => logoutAction())}
         >
           {isPending ? <Loader2Icon className="animate-spin" /> : <LogOutIcon />}
-          Log out
+          {t("nav.logout")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

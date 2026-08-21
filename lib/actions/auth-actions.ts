@@ -6,7 +6,12 @@ import { AuthError, CredentialsSignin } from "next-auth"
 import { signIn, signOut } from "@/auth"
 import { apiClient } from "@/lib/api/client"
 import { RegisterSchema, LoginSchema } from "@/lib/validation/auth-schemas"
+import { getLocale } from "@/lib/i18n/get-locale"
 
+// Server actions run without knowledge of which locale the calling client is
+// rendered in, so form-level failures are reported as translation-key codes
+// (looked up under `auth.login`/`auth.register` in the messages) rather than
+// hardcoded English strings, and the client form does the translating.
 export interface AuthActionState {
   errors?: {
     name?: string[]
@@ -39,27 +44,27 @@ export async function registerAction(
   } catch (error) {
     if (axios.isAxiosError(error)) {
       if (error.response?.status === 409) {
-        return { errors: { email: ["An account with this email already exists"] } }
+        return { errors: { email: ["emailTaken"] } }
       }
       if (error.response?.status === 400 && error.response.data?.errors) {
         return { errors: error.response.data.errors }
       }
     }
-    return {
-      errors: { form: ["Something went wrong creating your account. Please try again."] },
-    }
+    return { errors: { form: ["genericError"] } }
   }
+
+  const locale = await getLocale()
 
   try {
     await signIn("credentials", { email, password, redirect: false })
   } catch (error) {
     if (error instanceof AuthError) {
-      redirect("/login")
+      redirect(`/${locale}/login`)
     }
     throw error
   }
 
-  redirect("/profile")
+  redirect(`/${locale}/profile`)
 }
 
 export async function loginAction(
@@ -81,22 +86,22 @@ export async function loginAction(
     await signIn("credentials", { email, password, redirect: false })
   } catch (error) {
     if (error instanceof CredentialsSignin) {
-      return { errors: { form: ["Invalid email or password"] } }
+      return { errors: { form: ["invalidCredentials"] } }
     }
     if (error instanceof AuthError) {
-      return { errors: { form: ["Something went wrong. Please try again."] } }
+      return { errors: { form: ["genericError"] } }
     }
     throw error
   }
 
-  redirect("/profile")
+  redirect(`/${await getLocale()}/profile`)
 }
 
 export async function logoutAction(): Promise<void> {
   await signOut({ redirect: false })
-  redirect("/")
+  redirect(`/${await getLocale()}`)
 }
 
 export async function googleSignInAction(): Promise<void> {
-  await signIn("google", { redirectTo: "/profile" })
+  await signIn("google", { redirectTo: `/${await getLocale()}/profile` })
 }

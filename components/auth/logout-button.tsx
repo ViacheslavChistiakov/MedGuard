@@ -1,6 +1,7 @@
 "use client"
 
 import { useTransition } from "react"
+import { useTranslation } from "react-i18next"
 import { LogOutIcon, Loader2Icon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { logoutAction } from "@/lib/actions/auth-actions"
@@ -13,6 +14,7 @@ export function LogoutButton({
   variant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const [isPending, startTransition] = useTransition()
+  const { t } = useTranslation()
 
   return (
     <Button
@@ -23,7 +25,7 @@ export function LogoutButton({
       onClick={() => startTransition(() => logoutAction())}
     >
       {isPending ? <Loader2Icon className="animate-spin" /> : <LogOutIcon />}
-      Log out
+      {t("nav.logout")}
     </Button>
   )
 }

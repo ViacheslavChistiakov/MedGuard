@@ -1,6 +1,7 @@
 "use client"
 
 import { useActionState, useEffect, useRef, useTransition } from "react"
+import { useTranslation } from "react-i18next"
 import { CameraIcon, Loader2Icon, XIcon } from "lucide-react"
 import { toast } from "sonner"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -32,19 +33,20 @@ export function AvatarUpload({
   const formRef = useRef<HTMLFormElement>(null)
   const [uploadState, uploadAction, isUploading] = useActionState(uploadAvatarAction, initialState)
   const [isRemoving, startRemoveTransition] = useTransition()
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (uploadState.error) {
-      toast.error(uploadState.error)
+      toast.error(t(`profile.avatar.${uploadState.error}`, uploadState.error))
       formRef.current?.reset()
     }
-  }, [uploadState])
+  }, [uploadState, t])
 
   function handleRemove() {
     startRemoveTransition(async () => {
       const result = await removeAvatarAction()
       if (result.error) {
-        toast.error(result.error)
+        toast.error(t(`profile.avatar.${result.error}`, result.error))
       }
     })
   }
@@ -68,7 +70,7 @@ export function AvatarUpload({
           ) : (
             <CameraIcon className="size-3" />
           )}
-          <span className="sr-only">Change avatar</span>
+          <span className="sr-only">{t("profile.changeAvatar")}</span>
         </label>
         <input
           id="avatar"
@@ -95,7 +97,7 @@ export function AvatarUpload({
           className="absolute -top-1 -right-1 rounded-full bg-muted text-muted-foreground hover:text-foreground"
         >
           <XIcon className="size-3" />
-          <span className="sr-only">Remove avatar</span>
+          <span className="sr-only">{t("profile.removeAvatar")}</span>
         </Button>
       )}
     </div>

@@ -1,0 +1,159 @@
+{
+  "appName": "MedGuard",
+  "close": "Close",
+  "nav": {
+    "home": "Home",
+    "plans": "Plans",
+    "profile": "Profile",
+    "login": "Log in",
+    "getStarted": "Get started",
+    "logout": "Log out",
+    "openMenu": "Open menu"
+  },
+  "language": {
+    "en": "English",
+    "ru": "Russian",
+    "switchLabel": "Language"
+  },
+  "footer": {
+    "copyright": "© {{year}} MedGuard. All plans shown are illustrative.",
+    "browsePlans": "Browse plans",
+    "getStarted": "Get started"
+  },
+  "home": {
+    "metaTitle": "MedGuard | Medical Insurance Plans",
+    "metaDescription": "Compare and favorite medical, dental, vision, life, travel, and critical illness insurance plans.",
+    "badge": "Health, dental, vision, life & more",
+    "title": "Insurance coverage that's simple to compare and easy to trust",
+    "subtitle": "MedGuard brings every type of insurance plan into one place, so you can compare prices and coverage side by side, then save the ones you like to your profile.",
+    "browsePlans": "Browse plans",
+    "createAccount": "Create a free account",
+    "valueProps": {
+      "vetted": {
+        "title": "Vetted coverage",
+        "description": "Every plan is reviewed for clear terms, so you know exactly what's covered."
+      },
+      "compare": {
+        "title": "Compare in minutes",
+        "description": "Filter by category and tier to find the plan that fits your budget and needs."
+      },
+      "favorites": {
+        "title": "Save your favorites",
+        "description": "Create an account to bookmark plans and pick up right where you left off."
+      }
+    },
+    "popularPlans": {
+      "title": "Popular plans",
+      "subtitle": "A few favorites among MedGuard members right now.",
+      "viewAll": "View all plans"
+    }
+  },
+  "plans": {
+    "metaTitle": "Plans | MedGuard",
+    "title": "Browse insurance plans",
+    "subtitle": "Filter by category to compare coverage and pricing side by side.",
+    "allPlans": "All plans",
+    "emptyMessage": "No plans match these filters yet.",
+    "perMonth": "/mo",
+    "favoriteAdd": "Add to favorites",
+    "favoriteRemove": "Remove from favorites",
+    "loginToFavoriteAria": "Log in to favorite this plan",
+    "loginToBuyAria": "Log in to buy this plan",
+    "buyThisPlanAria": "Buy this plan",
+    "buyInsurance": "Buy Insurance",
+    "loginToBuy": "Log in to buy",
+    "categories": {
+      "health": "Health",
+      "dental": "Dental",
+      "vision": "Vision",
+      "life": "Life",
+      "travel": "Travel",
+      "critical-illness": "Critical Illness"
+    },
+    "tiers": {
+      "basic": "Basic",
+      "standard": "Standard",
+      "premium": "Premium",
+      "elite": "Elite"
+    },
+    "badges": {
+      "popular": "Popular",
+      "bestValue": "Best Value",
+      "new": "New"
+    }
+  },
+  "auth": {
+    "or": "or",
+    "continueWithGoogle": "Continue with Google",
+    "fields": {
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "fullName": "Full name"
+    },
+    "fieldErrors": {
+      "nameTooShort": "Name must be at least 2 characters",
+      "invalidEmail": "Enter a valid email address",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordRequired": "Password is required",
+      "passwordsMismatch": "Passwords do not match"
+    },
+    "login": {
+      "metaTitle": "Log in | MedGuard",
+      "title": "Welcome back",
+      "description": "Log in to view and manage your favorite plans.",
+      "submit": "Log in",
+      "noAccount": "Don't have an account?",
+      "createOne": "Create one",
+      "invalidCredentials": "Invalid email or password",
+      "genericError": "Something went wrong. Please try again."
+    },
+    "register": {
+      "metaTitle": "Create account | MedGuard",
+      "title": "Create your account",
+      "description": "Save your favorite insurance plans in one place.",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "logIn": "Log in",
+      "emailTaken": "An account with this email already exists",
+      "genericError": "Something went wrong creating your account. Please try again."
+    }
+  },
+  "profile": {
+    "metaTitle": "Your profile | MedGuard",
+    "notFound": "We couldn't find your account. Please log in again.",
+    "favoritePlans": "Your favorite plans",
+    "favoritesCount_one": "{{count}} favorite",
+    "favoritesCount_other": "{{count}} favorites",
+    "memberSince": "Member since {{date}}",
+    "changeAvatar": "Change avatar",
+    "removeAvatar": "Remove avatar",
+    "avatar": {
+      "chooseImage": "Please choose an image to upload",
+      "uploadError": "Something went wrong uploading your avatar. Please try again.",
+      "removeError": "Something went wrong removing your avatar. Please try again."
+    },
+    "empty": {
+      "title": "No favorite plans yet",
+      "description": "Browse our plans and tap the heart icon to save the ones you like.",
+      "browsePlans": "Browse plans"
+    }
+  },
+  "checkout": {
+    "metaTitle": "Checkout | MedGuard",
+    "title": "Payment details",
+    "subtitle": "Enter your card information to complete your purchase.",
+    "nameOnCard": "Name on card",
+    "cardNumber": "Card number",
+    "expiry": "Expiry",
+    "cvc": "CVC",
+    "processing": "Processing…",
+    "confirmPayment": "Confirm payment"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error occurred. You can try again or head back home.",
+    "tryAgain": "Try again",
+    "goHome": "Go home"
+  }
+}
