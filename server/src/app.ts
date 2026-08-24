@@ -6,6 +6,7 @@ import morgan from "morgan"
 import { MulterError } from "multer"
 import { plansRouter } from "./routes/plans.routes.js"
 import { authRouter } from "./routes/auth.routes.js"
+import { ordersRouter } from "./routes/orders.routes.js"
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -24,6 +25,7 @@ export function createApp(): Express {
 
   app.use("/api/plans", plansRouter)
   app.use("/api/auth", authRouter)
+  app.use("/api/orders", ordersRouter)
 
   app.use((_req, res) => {
     res.status(404).json({ error: "Not found" })

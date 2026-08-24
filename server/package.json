@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "migrate:current-plan-ids": "tsx scripts/backfill-current-plan-ids.ts",
+    "reconcile:yookassa": "tsx scripts/reconcile-yookassa-payments.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

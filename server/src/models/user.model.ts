@@ -8,6 +8,7 @@ const userSchema = new Schema(
     avatarUrl: { type: String, default: null },
     avatarSource: { type: String, enum: ["upload", "google"], default: null },
     favoritePlanIds: { type: [String], required: true, default: [] },
+    currentPlanIds: { type: [String], default: [] },
   },
   {
     timestamps: true,
