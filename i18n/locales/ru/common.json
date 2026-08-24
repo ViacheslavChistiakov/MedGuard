@@ -128,6 +128,21 @@
     "favoritesCount_many": "{{count}} избранных планов",
     "favoritesCount_other": "{{count}} избранного плана",
     "memberSince": "Регистрация: {{date}}",
+    "currentPlan": {
+      "title": "Ваши текущие планы",
+      "activeSince": "Действует с {{date}}",
+      "expiresOn": "Истекает {{date}}",
+      "expired": "Истёк",
+      "daysLeft_one": "Остался {{count}} день",
+      "daysLeft_few": "Осталось {{count}} дня",
+      "daysLeft_many": "Осталось {{count}} дней",
+      "daysLeft_other": "Осталось {{count}} дня",
+      "empty": {
+        "title": "Пока нет активного плана",
+        "description": "После покупки плана он появится здесь.",
+        "browsePlans": "Смотреть планы"
+      }
+    },
     "changeAvatar": "Изменить аватар",
     "removeAvatar": "Удалить аватар",
     "avatar": {
@@ -144,13 +159,30 @@
   "checkout": {
     "metaTitle": "Оформление заказа | MedGuard",
     "title": "Платёжные данные",
-    "subtitle": "Введите данные карты, чтобы завершить покупку.",
-    "nameOnCard": "Имя на карте",
-    "cardNumber": "Номер карты",
-    "expiry": "Срок действия",
-    "cvc": "CVC",
-    "processing": "Обработка…",
-    "confirmPayment": "Подтвердить оплату"
+    "subtitle": "Проверьте свой план и оплатите его через ЮKassa.",
+    "payWithYookassa": "Оплатить через ЮKassa",
+    "processing": "Перенаправление в ЮKassa…",
+    "successTitle": "Оплата прошла успешно",
+    "successSubtitle": "Спасибо — ваш план будет активирован в ближайшее время.",
+    "failTitle": "Оплата не прошла",
+    "failSubtitle": "Что-то пошло не так при оплате. Вы можете попробовать снова."
+  },
+  "email": {
+    "greeting": "Здравствуйте, {{name}}!",
+    "paymentLink": {
+      "subject": "Завершите покупку — {{planName}}",
+      "heading": "Завершите покупку",
+      "body": "Осталось совсем немного, чтобы активировать план «{{planName}}». Проверьте детали ниже и завершите оплату, чтобы активировать покрытие.",
+      "priceLabel": "Цена",
+      "button": "Оплатить"
+    },
+    "paymentConfirmed": {
+      "subject": "Оплата подтверждена — {{planName}}",
+      "heading": "Оплата подтверждена",
+      "body": "Ваша оплата плана «{{planName}}» прошла успешно, и он уже активен.",
+      "priceLabel": "Оплачено",
+      "viewPlan": "Посмотреть план"
+    }
   },
   "error": {
     "title": "Что-то пошло не так",

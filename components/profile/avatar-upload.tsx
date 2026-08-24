@@ -55,7 +55,7 @@ export function AvatarUpload({
 
   return (
     <div className="relative">
-      <Avatar size="lg">
+      <Avatar size="xl">
         {avatarUrl && <AvatarImage src={avatarUrl} alt={name} />}
         <AvatarFallback>{getInitials(name)}</AvatarFallback>
       </Avatar>
@@ -63,12 +63,12 @@ export function AvatarUpload({
       <form ref={formRef} action={uploadAction}>
         <label
           htmlFor="avatar"
-          className="absolute -right-1 -bottom-1 inline-flex size-6 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background hover:opacity-90"
+          className="absolute -right-1 -bottom-1 inline-flex size-5 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground ring-2 ring-background hover:opacity-90"
         >
           {isPending ? (
-            <Loader2Icon className="size-3 animate-spin" />
+            <Loader2Icon className="size-2.5 animate-spin" />
           ) : (
-            <CameraIcon className="size-3" />
+            <CameraIcon className="size-2.5" />
           )}
           <span className="sr-only">{t("profile.changeAvatar")}</span>
         </label>
@@ -94,9 +94,9 @@ export function AvatarUpload({
           size="icon-xs"
           disabled={isPending}
           onClick={handleRemove}
-          className="absolute -top-1 -right-1 rounded-full bg-muted text-muted-foreground hover:text-foreground"
+          className="absolute -top-1 -right-1 size-5 rounded-full bg-muted text-muted-foreground hover:text-foreground"
         >
-          <XIcon className="size-3" />
+          <XIcon className="size-2.5" />
           <span className="sr-only">{t("profile.removeAvatar")}</span>
         </Button>
       )}

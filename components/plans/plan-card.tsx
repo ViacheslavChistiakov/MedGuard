@@ -7,6 +7,7 @@ import { Card, BuyButton } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { LocaleLink } from "@/components/locale-link"
+import { BuyPlanDialog } from "@/components/checkout/buy-plan-dialog"
 import { useLocalizedPlan } from "@/components/plan-store-provider"
 import { toggleFavoriteAction } from "@/lib/actions/favorites-actions"
 import type { PlanBadge } from "@/lib/types/plan"
@@ -96,9 +97,7 @@ export function PlanCard({ planId, initialFavorited, isAuthenticated }: PlanCard
             <span className="text-sm text-muted-foreground">★ {plan.rating.toFixed(1)}</span>
           </div>
           {isAuthenticated ? (
-            <BuyButton render={<LocaleLink href="/checkout" aria-label={t("plans.buyThisPlanAria")} />}>
-              {t("plans.buyInsurance")}
-            </BuyButton>
+            <BuyPlanDialog plan={plan} />
           ) : (
             <BuyButton render={<LocaleLink href="/login" aria-label={t("plans.loginToBuyAria")} />}>
               {t("plans.loginToBuy")}

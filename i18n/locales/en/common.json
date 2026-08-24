@@ -126,6 +126,19 @@
     "favoritesCount_one": "{{count}} favorite",
     "favoritesCount_other": "{{count}} favorites",
     "memberSince": "Member since {{date}}",
+    "currentPlan": {
+      "title": "Your current plans",
+      "activeSince": "Active since {{date}}",
+      "expiresOn": "Expires {{date}}",
+      "expired": "Expired",
+      "daysLeft_one": "{{count}} day left",
+      "daysLeft_other": "{{count}} days left",
+      "empty": {
+        "title": "No active plan yet",
+        "description": "Once you purchase a plan, it will show up here.",
+        "browsePlans": "Browse plans"
+      }
+    },
     "changeAvatar": "Change avatar",
     "removeAvatar": "Remove avatar",
     "avatar": {
@@ -142,13 +155,30 @@
   "checkout": {
     "metaTitle": "Checkout | MedGuard",
     "title": "Payment details",
-    "subtitle": "Enter your card information to complete your purchase.",
-    "nameOnCard": "Name on card",
-    "cardNumber": "Card number",
-    "expiry": "Expiry",
-    "cvc": "CVC",
-    "processing": "Processing…",
-    "confirmPayment": "Confirm payment"
+    "subtitle": "Review your plan and pay securely via YooKassa.",
+    "payWithYookassa": "Pay with YooKassa",
+    "processing": "Redirecting to YooKassa…",
+    "successTitle": "Payment successful",
+    "successSubtitle": "Thanks — your plan will be activated shortly.",
+    "failTitle": "Payment failed",
+    "failSubtitle": "Something went wrong with your payment. You can try again."
+  },
+  "email": {
+    "greeting": "Hi {{name}},",
+    "paymentLink": {
+      "subject": "Complete your purchase — {{planName}}",
+      "heading": "Complete your purchase",
+      "body": "You're one step away from activating {{planName}}. Review the details below and complete your payment to activate coverage.",
+      "priceLabel": "Price",
+      "button": "Complete payment"
+    },
+    "paymentConfirmed": {
+      "subject": "Payment confirmed — {{planName}}",
+      "heading": "Payment confirmed",
+      "body": "Your payment for {{planName}} was successful and your plan is now active.",
+      "priceLabel": "Amount paid",
+      "viewPlan": "View your plan"
+    }
   },
   "error": {
     "title": "Something went wrong",

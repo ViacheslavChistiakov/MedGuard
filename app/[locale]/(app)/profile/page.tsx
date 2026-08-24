@@ -1,7 +1,12 @@
 import type { Metadata } from "next"
 import { verifySession, getCurrentUser } from "@/lib/auth/dal"
-import { favoritesRepository } from "@/lib/repositories"
+import { favoritesRepository, ordersRepository } from "@/lib/repositories"
+import { getPlanById } from "@/lib/data/insurance-plans"
+import type { OrderDTO } from "@/lib/repositories/types"
+import type { InsurancePlan } from "@/lib/types/plan"
 import { ProfileHeader } from "@/components/profile/profile-header"
+import { CurrentPlanCard } from "@/components/profile/current-plan-card"
+import { PlansCarousel } from "@/components/profile/plans-carousel"
 import { FavoritePlansList } from "@/components/profile/favorite-plans-list"
 import { Separator } from "@/components/ui/separator"
 import initTranslations from "@/i18n"
@@ -35,10 +40,28 @@ export default async function ProfilePage({ params }: PageProps<"/[locale]/profi
   }
 
   const favoriteCount = (await favoritesRepository.listByUser(session.userId)).length
+  const currentOrders = await ordersRepository.getCurrentPlans()
+  const pairs = await Promise.all(
+    currentOrders.map(async (order) => ({ order, plan: await getPlanById(order.planId) }))
+  )
+  const currentPlanPairs: { order: OrderDTO; plan: InsurancePlan }[] = pairs.filter(
+    (pair): pair is { order: OrderDTO; plan: InsurancePlan } => pair.plan !== null
+  )
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6">
       <ProfileHeader user={user} favoriteCount={favoriteCount} locale={locale} />
+      <Separator className="my-8" />
+      <h2 className="mb-4 text-xl font-semibold">{t("profile.currentPlan.title")}</h2>
+      {currentPlanPairs.length === 0 ? (
+        <CurrentPlanCard order={null} plan={null} locale={locale} />
+      ) : (
+        <PlansCarousel>
+          {currentPlanPairs.map(({ order, plan }) => (
+            <CurrentPlanCard key={order.invId} order={order} plan={plan} locale={locale} />
+          ))}
+        </PlansCarousel>
+      )}
       <Separator className="my-8" />
       <h2 className="mb-4 text-xl font-semibold">{t("profile.favoritePlans")}</h2>
       <FavoritePlansList userId={session.userId} locale={locale} />

@@ -19,3 +19,12 @@ export const getPlansByCategory = cache(
     return data
   }
 )
+
+export const getPlanById = cache(async (id: string): Promise<InsurancePlan | null> => {
+  try {
+    const { data } = await apiClient.get<InsurancePlan>(`/api/plans/${id}`)
+    return data
+  } catch {
+    return null
+  }
+})
