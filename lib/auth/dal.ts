@@ -22,7 +22,7 @@ function resolveAvatarUrl(avatarUrl: string): string {
   if (avatarUrl.startsWith("http://") || avatarUrl.startsWith("https://")) {
     return avatarUrl
   }
-  return `${process.env.API_BASE_URL}${avatarUrl}`
+  return `${process.env.NEXT_PUBLIC_API_URL}${avatarUrl}`
 }
 
 export const getOptionalSession = cache(async (): Promise<SessionPayload | null> => {
