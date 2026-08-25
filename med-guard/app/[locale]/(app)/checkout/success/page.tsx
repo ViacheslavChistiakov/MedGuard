@@ -6,6 +6,13 @@ import { Card } from "@/components/ui/card"
 import initTranslations from "@/i18n"
 import { isLocale, fallbackLng } from "@/i18n/settings"
 
+const RECONCILE_ATTEMPTS = 4
+const RECONCILE_RETRY_DELAY_MS = 1500
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export async function generateMetadata({
   params,
 }: PageProps<"/[locale]/checkout/success">): Promise<Metadata> {
@@ -29,19 +36,27 @@ export default async function CheckoutSuccessPage({
   // The order's status in MongoDB is the only authoritative source of
   // truth; this page is UX only.
   //
-  // Self-heal: in local dev, YooKassa's servers can never reach a
-  // localhost webhook, so an order that genuinely succeeded can still show
-  // "pending" by the time the browser lands back here. If so, check
-  // directly with YooKassa and reconcile it now, rather than requiring a
-  // manual `npm run reconcile:yookassa`. Best-effort - a failure here must
-  // not break this page.
+  // Self-heal: this is the only confirmation path when the real webhook
+  // (med-guard/app/api/payments/yookassa/result/route.ts) either can't
+  // reach us (e.g. localhost in dev) or was never registered with YooKassa
+  // at all. Even with a working webhook, the browser can land back here
+  // before YooKassa's own API reports the payment as "succeeded" yet - so
+  // this retries a few times with a short delay rather than giving up
+  // after a single check. Best-effort - a failure here must not break this
+  // page.
   const { invId } = await searchParams
   const invIdNumber = Number(invId)
   if (Number.isInteger(invIdNumber)) {
     try {
       const order = await ordersRepository.getByInvId(invIdNumber)
       if (order?.status === "pending") {
-        await reconcilePendingOrder(invIdNumber)
+        for (let attempt = 1; attempt <= RECONCILE_ATTEMPTS; attempt++) {
+          const reconciled = await reconcilePendingOrder(invIdNumber)
+          if (reconciled) break
+          if (attempt < RECONCILE_ATTEMPTS) {
+            await sleep(RECONCILE_RETRY_DELAY_MS)
+          }
+        }
       }
     } catch (error) {
       console.error("Checkout success self-heal check failed:", error)
