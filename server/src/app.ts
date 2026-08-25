@@ -31,6 +31,13 @@ export function createApp(): Express {
     res.status(404).json({ error: "Not found" })
   })
 
+  app.use(
+  cors({
+    origin: "https://med-guard-opal.vercel.app/",
+    credentials: true,
+  })
+);
+
   app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
     if (error instanceof MulterError) {
       const message =
